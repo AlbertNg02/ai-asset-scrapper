@@ -13,10 +13,12 @@ import json
 
 options = Options()
 options.add_argument('--ignore-certificate-errors')
+options.add_argument("--start-maximized")
 
 # driver = webdriver.Chrome()
 driver = webdriver.Chrome(service=Service(
     ChromeDriverManager().install()), options=options)
+
 driver.get("https://app.leonardo.ai/auth/login")
 # elem = driver.find_element(By.NAME, "q")
 # elem.clear()
@@ -68,6 +70,8 @@ WebDriverWait(driver, 10).until(
 )
 
 
+
+
 def get_pop_up_data(Xpath):
     return_list = {}
 
@@ -79,7 +83,8 @@ def get_pop_up_data(Xpath):
             (By.XPATH, Xpath)))
     # close_button = driver.find_element(By.CLASS_NAME ,"chakra-modal__content-container")
     # close_button = driver.find_element(By.XPATH,"/html/body/div[4]/div[3]/div/section/div[2]/div/div[1]/button")
-    # close_button = driver.find_element(By.XPATH, Xpath)
+    close_button = driver.find_element(By.XPATH, Xpath)
+
 
     # Name
     name_xpath = "/html/body/div[4]/div[3]/div/section/div[2]/div/div[1]/div[2]/div[1]/div[2]/div/h2"
@@ -112,6 +117,10 @@ def get_pop_up_data(Xpath):
     image_detail = driver.find_element(By.XPATH, image_xpath).get_attribute("src")
     return_list['img_source']=image_detail
 
+    # Next Button
+    # next_button_xpath = "/html/body/div[4]/div[3]/div/section/div[1]/div/button"
+    # next_button = driver.find_element(By.XPATH, next_button_xpath)
+    # next_button.click()
     close_button.click()
     # print(return_list)
     time.sleep(2)
@@ -151,11 +160,11 @@ def get_reccuring_data(file_object, end_count ):
     
 
 
+if __name__ == "__main__":
 
-
-filename = "extract.json"
-with open(filename, 'a') as file_object:
-    end_count = 0
-    get_reccuring_data(file_object, end_count)
-             
-driver.close()
+    filename = "extract.json"
+    with open(filename, 'a') as file_object:
+        end_count = 0
+        get_reccuring_data(file_object, end_count)
+                
+    driver.close()
