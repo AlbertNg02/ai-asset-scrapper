@@ -13,7 +13,7 @@ import json
 
 options = Options()
 options.add_argument('--ignore-certificate-errors')
-options.add_argument("--start-maximized")
+# options.add_argument("--start-maximized")
 
 # driver = webdriver.Chrome()
 driver = webdriver.Chrome(service=Service(
@@ -117,54 +117,61 @@ def get_pop_up_data(Xpath):
     image_detail = driver.find_element(By.XPATH, image_xpath).get_attribute("src")
     return_list['img_source']=image_detail
 
-    # Next Button
-    # next_button_xpath = "/html/body/div[4]/div[3]/div/section/div[1]/div/button"
-    # next_button = driver.find_element(By.XPATH, next_button_xpath)
-    # next_button.click()
-    close_button.click()
+    first_next_button = driver.find_elements(By.XPATH, "/html/body/div[4]/div[3]/div/section/div[1]/div[2]/button")
+    if len(first_next_button) > 0:
+        first_next_button[0].click()
+    else:
+        # Next Button
+        next_button_xpath = "/html/body/div[4]/div[3]/div/section/div[1]/div[1]/button"
+        next_button = driver.find_element(By.XPATH, next_button_xpath)
+        next_button.click()
+    # close_button.click()
     # print(return_list)
-    time.sleep(2)
+    time.sleep(3)
+    json.dump(return_list, file_object)
+    file_object.write(",")
+    get_pop_up_data(Xpath)
 
-    return return_list
+    # return return_list
 
     
 
-def get_reccuring_data(file_object, end_count ):
-    
-    
-    
+def get_reccuring_data(file_object):
     elements = driver.find_elements(By.CLASS_NAME, "chakra-card__body")
-    print(len(elements))
-    print("-"*100)
-    elements = elements[end_count:(len(elements)-1)]
-    for i, element in enumerate(elements):
-        element.click()
-        prompt_detail = get_pop_up_data("/html/body/div[4]/div[3]/div/section/div[2]/div/div[1]/button")
+    elements[0].click()
+    
+    prompt_detail = get_pop_up_data("/html/body/div[4]/div[3]/div/section/div[2]/div/div[1]/button")
+    # json.dump(prompt_detail, file_object)
+    # file_object.write(",")
+    # print(len(elements))
+    # print("-"*100)
+    # elements = elements[end_count:(len(elements)-1)]
+    # for i, element in enumerate(elements):
+    #     element.click()
         
-        json.dump(prompt_detail, file_object)
-        if i < len(elements) - 1:
-            file_object.write(",")  # Add comma for all elements except the last one
-        if i == len(elements) - 1:
+    #     
+    #     if i < len(elements) - 1:
+    #         file_object.write(",")  # Add comma for all elements except the last one
+    #     if i == len(elements) - 1:
 
         
 
-            ActionChains(driver)\
-                .send_keys("End")\
-                .perform()
+    #         ActionChains(driver)\
+    #             .send_keys("End")\
+    #             .perform()
                 
-            driver.implicitly_wait(10)
+    #         driver.implicitly_wait(10)
 
-            end_count = i + 1
-            get_reccuring_data(file_object, end_count)
-            time.sleep(5)
+    #         end_count = i + 1
+    #         get_reccuring_data(file_object, end_count)
+    #         time.sleep(5)
     
 
 
 if __name__ == "__main__":
-
+    driver.fullscreen_window()
     filename = "extract.json"
     with open(filename, 'a') as file_object:
-        end_count = 0
-        get_reccuring_data(file_object, end_count)
+        get_reccuring_data(file_object)
                 
     driver.close()
