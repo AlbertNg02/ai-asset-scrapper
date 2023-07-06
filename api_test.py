@@ -43,9 +43,9 @@ def store_data(response):
                     if variation["upscale_details"][0]["oneClicktype"] == "ALTERNATE":
                         entry = {'src': image['url'], 'prompt': image['generation']['prompt'], 'negativePrompt': image['generation']['negativePrompt']}
                         entries.append(entry)
-                        # print("index: ", index, "total images: ", total_images)
-                    else:
-                        print("Not Alternate")
+                        print("Alternate with index: ", index, "total images: ", total_images)
+                    # else:
+                    #     print("Not Alternate")
 
         if index == total_images - 1:
             new_lt_value = image['createdAt']
