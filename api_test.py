@@ -64,7 +64,7 @@ def store_data(response):
 while True:
 
     response = make_api_request(URL, BEARER_TOKEN, LT_VALUE)
-    # print(response)
+    print(response)
     new_lt = store_data(response)
     if new_lt is None:
         break
